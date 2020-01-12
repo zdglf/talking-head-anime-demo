@@ -92,7 +92,7 @@ class PuppeteerApp:
             self.load_image_from_file(file_name)
 
     def load_image_from_file(self, file_name):
-        image = PhotoImage(file=file_name)
+        image = PIL.ImageTk.PhotoImage(file=file_name)
         if image.width() != self.poser.image_size() or image.height() != self.poser.image_size():
             message = "The loaded image has size %dx%d, but we require %dx%d." \
                       % (image.width(), image.height(), self.poser.image_size(), self.poser.image_size())
@@ -183,7 +183,12 @@ class PuppeteerApp:
 
 
 if __name__ == "__main__":
-    cuda = torch.device('cuda')
+    cuda = torch.device('cpu')
+    if torch.cuda.is_available():
+        print("enable cuda")
+        cuda = torch.device('cuda')
+    else:
+        print("enable cpu")
     poser = MorphRotateCombinePoser256Param6(
         morph_module_spec=FaceMorpherSpec(),
         morph_module_file_name="data/face_morpher.pt",

@@ -18,7 +18,13 @@ def torch_save(content, file_name):
 
 def torch_load(file_name):
     with open(file_name, 'rb') as f:
-        return torch.load(f)
+        if torch.cuda.is_available():
+            print('enable cuda\n')
+            return torch.load(f, map_location=torch.device('cuda') )
+        else:
+            print('enable cpu\n')
+            return torch.load(f, map_location=torch.device('cpu') )
+        
 
 
 def srgb_to_linear(x):
